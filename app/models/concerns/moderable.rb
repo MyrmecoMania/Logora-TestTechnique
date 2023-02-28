@@ -1,4 +1,5 @@
 require 'net/http'
+require 'uri'
 module Moderable
   extend ActiveSupport::Concern
 
@@ -8,9 +9,10 @@ module Moderable
     def moderator(arg1,*args)
       args.push(arg1)
       args.each do |arg|
-        uri = URI("https://moderation.logora.fr/predict?text=#{self.send(arg)}")
+        str = self.send(arg).downcase.gsub(/[^a-zA-Z]/, " ")
+        uri = URI("https://moderation.logora.fr/predict?text=#{str}")
         response = JSON.parse(Net::HTTP.get(uri))["prediction"]["0"]
-        self.update(is_accepted: false) if response > 0.95
+        self.update(is_accepted: false) if response > 0.5
       end
       self.update(is_accepted: true) if self.is_accepted == nil
     end
