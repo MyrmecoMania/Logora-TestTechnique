@@ -1,7 +1,8 @@
 require "test_helper"
 
 class ModeratedModelTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
+  test "ModeratedModel a bien la méthode d'instance moderator" do
+    modelmoderator = ModelModerator.new
+    assert modelmoderator.moderator
+  end
 end
